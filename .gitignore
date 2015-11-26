@@ -6,4 +6,4 @@
 /build
 /captures
 /.idea/misc.xml
-
+.idea/**
