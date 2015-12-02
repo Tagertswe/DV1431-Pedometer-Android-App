@@ -1,37 +1,56 @@
-<RelativeLayout
-    android:id="@+id/main_layout"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    tools:context=".MainActivity">
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <android.support.v7.widget.Toolbar
-        android:id="@+id/toolbar"
-        android:layout_width="match_parent"
+    <TextView
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:background="?attr/colorPrimary"
-        android:elevation="6dp"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"/>
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="40dp"
+        android:layout_row="0"
+        android:text="PMmeter"
+        android:textSize="46dip"
+        android:textStyle="bold" />
 
-    <android.support.design.widget.TabLayout
-        android:id="@+id/tab_layout"
-        android:layout_width="match_parent"
+
+    <EditText
+        android:layout_marginTop="120dp"
+        android:id="@+id/loginUsername"
+        android:layout_column="1"
+        android:imeOptions="actionNext"
+        android:layout_columnSpan="4"
+        android:singleLine="true"
+        android:layout_row="1"
+        android:ems="15"
+        android:hint="Username"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+    <EditText
+        android:layout_marginTop="45dp"
+        android:id="@+id/loginPassword"
+        android:layout_column="1"
+        android:layout_columnSpan="4"
+        android:layout_row="1"
+        android:ems="15"
+        android:hint="Password"
+        android:singleLine="true"
+        android:imeOptions="actionSend"
+        android:inputType="textPassword"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content" />
+
+
+    <Button
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/toolbar"
-        android:background="?attr/colorPrimary"
-        android:elevation="6dp"
-        android:minHeight="?attr/actionBarSize"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"/>
+        android:text="login"
+        android:clickable="true"
+        android:id="@+id/login_button"
+        android:layout_marginTop="40dp"
+        android:layout_gravity="center_horizontal"
+        android:ems="15"
+        />
 
-    <android.support.v4.view.ViewPager
-        android:id="@+id/pager"
-        android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:layout_below="@id/tab_layout"/>
-
-</RelativeLayout>
+</LinearLayout>
