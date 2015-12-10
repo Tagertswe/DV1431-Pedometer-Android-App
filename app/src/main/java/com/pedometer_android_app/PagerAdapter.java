@@ -24,6 +24,7 @@ public class PagerAdapter extends FragmentStatePagerAdapter {
                 return tab1;
             case 1:
                 TabFragmentSettings tab2 = new TabFragmentSettings();
+
                 return tab2;
             case 2:
                 TabFragmentPedometer tab3 = new TabFragmentPedometer();

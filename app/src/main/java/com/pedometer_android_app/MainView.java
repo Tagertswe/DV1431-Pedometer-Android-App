@@ -2,13 +2,22 @@ package com.pedometer_android_app;
 
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.TextView;
+
+import name.bagi.levente.pedometer.StepService;
 
 public class MainView extends AppCompatActivity {
 
@@ -19,6 +28,12 @@ public class MainView extends AppCompatActivity {
 
 
         setContentView(R.layout.main_view_activity);
+
+//        view = getview
+
+
+
+
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -88,4 +103,8 @@ public class MainView extends AppCompatActivity {
 
         return super.onOptionsItemSelected(item);
     }
+
+
+
+
 }
