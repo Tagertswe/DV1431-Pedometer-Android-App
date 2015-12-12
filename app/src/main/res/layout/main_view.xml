@@ -1,15 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:orientation="vertical"
+    android:id="@+id/TabFragmentMain_id">
 
     <TextView
-        android:id="@+id/mainView_stepcount"
+        android:id="@+id/mainView_stepcount2"
+        android:layout_gravity="center"
+
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
-        android:text="Main view"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
-</RelativeLayout>
+    <TextView
+        android:id="@+id/mainView_headline"
+        android:text="Main view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:textAppearance="?android:attr/textAppearanceLarge"/>
+
+</FrameLayout>

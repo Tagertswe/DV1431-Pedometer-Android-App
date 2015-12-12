@@ -139,13 +139,13 @@ public class StepService extends Service {
 //        mCaloriesNotifier.setCalories(mCalories = mState.getFloat("calories", 0));
 //        mStepDetector.addStepListener(mCaloriesNotifier);
         
-        mSpeakingTimer = new SpeakingTimer(mPedometerSettings, mUtils);
-        mSpeakingTimer.addListener(mStepDisplayer);
-        mSpeakingTimer.addListener(mPaceNotifier);
-        mSpeakingTimer.addListener(mDistanceNotifier);
-        mSpeakingTimer.addListener(mSpeedNotifier);
-        mSpeakingTimer.addListener(mCaloriesNotifier);
-        mStepDetector.addStepListener(mSpeakingTimer);
+//        mSpeakingTimer = new SpeakingTimer(mPedometerSettings, mUtils);
+//        mSpeakingTimer.addListener(mStepDisplayer);
+//        mSpeakingTimer.addListener(mPaceNotifier);
+//        mSpeakingTimer.addListener(mDistanceNotifier);
+//        mSpeakingTimer.addListener(mSpeedNotifier);
+//        mSpeakingTimer.addListener(mCaloriesNotifier);
+//        mStepDetector.addStepListener(mSpeakingTimer);
         
         // Used when debugging:
         // mStepBuzzer = new StepBuzzer(this);
