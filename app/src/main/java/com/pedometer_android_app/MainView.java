@@ -44,6 +44,9 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
 
     private static final int STEPS_MSG = 1;
 
+
+    // Handles incoming message from the StepService
+    // (accelerometer stepcounter background service handler)
     private Handler mHandler = new Handler() {
         @Override public void handleMessage(Message msg) {
             switch (msg.what) {
@@ -63,7 +66,6 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
 
     };
 
-    //    private OnDataPass dataPasser;
     private StepService.ICallback mCallback = new StepService.ICallback() {
         public void stepsChanged(int value) {
             mHandler.sendMessage(mHandler.obtainMessage(STEPS_MSG, value, 0));
@@ -136,8 +138,8 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
 
         mStepValue = 0;
         bundle = new Bundle();
-//        bundle.putInt("TabFragmentMain",mStepValue);
 
+        // initializes the StepService for continuous step counter tracking.
         mUtils = Utils.getInstance();
         mSettings = PreferenceManager.getDefaultSharedPreferences(this);
         mPedometerSettings = new PedometerSettings(mSettings);
@@ -172,48 +174,20 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
         tabLayout.setOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
+                // if TabFragmentMain tab is selected, then it contacts the passData() method.
               if(tab.getPosition() == 0){
                     passData(mStepValue);
                     Log.d(TAG, "this is executed in tab selected for main view!");
-//                    TabFragmentMain mFragment = (TabFragmentMain)getSupportFragmentManager().findFragmentById(R.id.TabFragmentMain_id);
-//                    if(mFragment != null){
-//                        mFragment.setStepsView(mStepValue);
-//                        Log.d(TAG, "passdata in mainview is called in select tabs! step value: "+mStepValue);
-//                    }
-//                    else {
-//                        // Otherwise, we're in the one-pane layout and must swap frags...
-//                        Log.d(TAG, "passdata in mainview is called in select tabs! 2");
-//                        // Create fragment and give it an argument for the selected article
-//                        TabFragmentMain newFragment = new TabFragmentMain();
-//                        Bundle args = new Bundle();
-//                        args.putInt(TAG, mStepValue);
-//                        newFragment.setArguments(args);
-//
-//                        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//
-//                        // Replace whatever is in the fragment_container view with this fragment,
-//                        // and add the transaction to the back stack so the user can navigate back
-//                        transaction.replace(R.id.TabFragmentMain_id, newFragment);
-//                        transaction.addToBackStack(null);
-//
-//                        // Commit the transaction
-//                        transaction.commit();
-//                    }
-//                    viewPager.notify();
-//                      viewPager.geti
                 }
                 viewPager.setCurrentItem(tab.getPosition());
             }
 
             @Override
             public void onTabUnselected(TabLayout.Tab tab) {
-//                FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//                transaction.detach(tab);
             }
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-
             }
         });
     }
@@ -232,6 +206,7 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
     protected void onResume() {
         Log.i(TAG, "[ACTIVITY] onResume");
         super.onResume();
+
 
         mSettings = PreferenceManager.getDefaultSharedPreferences(this);
         mPedometerSettings = new PedometerSettings(mSettings);
@@ -279,30 +254,24 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
     }
 
 
+    //This method is called for every stepcounter update.
     @Override
     public void passData(int data) {
-//        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//        TabFragmentMain mFragment = (TabFragmentMain)getSupportFragmentManager().findFragmentById(R.id.TabFragmentMain_id);
+        // assigns mFragment to the existing Fragment for the layout of TabFragmentMain,
+        // it's null if there isn't one running.
         mFragment = (TabFragmentMain)getSupportFragmentManager().findFragmentById(R.id.TabFragmentMain_id);
         if(mFragment != null){
-//            FragmentManager fm = getFragmentManager();
+            // If it's null, then it stes the textview in TabFragmentMain to an updated value.
             mFragment.setStepsView(mStepValue);
-//            transaction.remove(mFragment);
             Log.d(TAG, "passdata in mainview is called! step value: "+mStepValue);
         }
         else {
             // Otherwise, we're in the one-pane layout and must swap frags...
             Log.d(TAG, "passdata in mainview is called! 2");
             // Create fragment and give it an argument for the selected article
-//            mFragment = new TabFragmentMain();
               mFragment = TabFragmentMain.newInstance(mStepValue);
-//            TabFragmentMain newFragment = (TabFragmentMain)getSupportFragmentManager().findFragmentById(R.id.TabFragmentMain_id);
-//            Bundle args = new Bundle();
-//            bundle.putInt(TAG, mStepValue);
-//            mFragment.setArguments(bundle);
-
-//        viewPager.notify
         }
+        // Creates a new transaction for TabFragmentMain fragment, and replaces the current one.
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
         // Replace whatever is in the fragment_container view with this fragment,
@@ -311,10 +280,11 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
         transaction.addToBackStack(null);
         // Commit the transaction
         transaction.commit();
+        //Notifies the viewpager that the fragments have changed.
         viewPager.getAdapter().notifyDataSetChanged();
     }
 
-
+    // The below class is for the handling of tabs
     public class PagerAdapter extends FragmentStatePagerAdapter {
         private int mNumOfTabs;
         private String TAG = "";
@@ -331,15 +301,8 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
             Log.d(TAG, "this prints in pageradapter");
             switch (position) {
                 case 0:
-//                    TabFragmentMain tab1 = new TabFragmentMain();
-//                return TabFragmentMain.instantiate(,"TabFragmentMain");
-//                tab1.update();
                    Fragment tab1 = TabFragmentMain.newInstance(mStepValue);
-//                    bundle.putInt(TAG, mStepValue);
-//                    tab1.setArguments(bundle);
-//                    tab1.setStepsView(mStepValue);
                     return tab1;
-//                    return  TabFragmentMain.newInstance(mStepValue);
                 case 1:
                     TabFragmentSettings tab2 = new TabFragmentSettings();
                     return tab2;
@@ -354,6 +317,9 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
             }
         }
 
+        //This is an override for the viewpager so it will always recreate the fragments upon
+        // switching between them. This is to ensure the main view is updated dynamically and updates
+        //the steps continuously
         public int getItemPosition(Object object) {
             return POSITION_NONE;
         }

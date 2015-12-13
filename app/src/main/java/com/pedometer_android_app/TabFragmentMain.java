@@ -1,12 +1,8 @@
 package com.pedometer_android_app;
 
 import android.app.Activity;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -25,21 +21,7 @@ public class TabFragmentMain extends Fragment{
     private TextView  countedSteps;
 
 
-//    @Override
-//    public void onCreate(Bundle savedInstanceState) {
-//        Log.d(TAG, "onCreate()");
-//        super.onCreate(savedInstanceState);
-//
-//        Bundle args = getArguments();
-//        if (args == null) {
-//            Log.d(TAG, "bundle is null in oncreate!");
-//        } else {
-//            Log.d(TAG, "bundle received in oncreate! ");
-//            mStepValue = args.getInt("TabFragmentMain");
-//            setStepsView(mStepValue);
-//        }
-//    }
-
+    //this method is contact in order to forward updated values of the stepcounter in other classes.
     public static TabFragmentMain newInstance(int data) {
         Log.d(TAG, "newInstance(steps:" + data + ")");
         Bundle args = new Bundle();
@@ -54,11 +36,13 @@ public class TabFragmentMain extends Fragment{
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         view = inflater.inflate(R.layout.main_view, container, false);
+        // initializes the counterSteps textView to the textview xml.
         countedSteps = ((TextView) view.findViewById(R.id.mainView_stepcount2));
 
         mStepValue = 0;
 
 
+        //gets the arguments for the update of the step counter
         Bundle args = getArguments();
         if (args == null) {
             Log.d(TAG, "bundle is null!");
@@ -67,28 +51,19 @@ public class TabFragmentMain extends Fragment{
             mStepValue = args.getInt("TabFragmentMain");
         }
 
-
         //fetches current step value from the Activity class where the StepService background
         //service is deployed.
-
         setStepsView(mStepValue);
-//        countedSteps.setText(String.valueOf(mStepValue));
 
         return view;
     }
 
 
-//    public void update(){
-////        countedSteps = ((TextView)view.findViewById(R.id.mainView_stepcount));
-//        countedSteps.setText(String.valueOf(mStepValue));
-//    }
+
     public void setStepsView(int data){
-//        countedSteps = ((TextView)view.findViewById(R.id.mainView_stepcount));
         mStepValue = data;
         countedSteps.setText(String.valueOf(mStepValue));
     }
-
-
 
     public interface passDataInterface{
         void passData(int data);
@@ -98,7 +73,6 @@ public class TabFragmentMain extends Fragment{
     public void onAttach(Activity activity) {
         super.onAttach(activity);
     }
-
 
 }
 
