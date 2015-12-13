@@ -61,11 +61,12 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
 //                    System.out.println("handlemessage is working sout");
                     mStepValue = (int)msg.arg1;
                     passData(mStepValue);
-                    if(mCounter == 10){
-                        passDB(db);
-                        mCounter = 0;
-                    }
-                    mCounter++;
+                    //TODO disabled in order to merge this with master
+//                    if(mCounter == 10){
+//                        passDB(db);
+//                        mCounter = 0;
+//                    }
+//                    mCounter++;
 //                    bundle.putInt(TAG,mStepValue);
 //                    countedSteps.setText("" + mStepValue);
                     break;
