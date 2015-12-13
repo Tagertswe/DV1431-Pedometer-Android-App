@@ -10,6 +10,7 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 /**
  * Created by pol on 11/26/15.
@@ -20,20 +21,19 @@ public class MainActivity extends AppCompatActivity {
     EditText mPassword;
     Db db = new Db(this);
     Button dbTestButton;
+    TextView notRegged;
 
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        //setContentView(R.layout.register_view);
-        db.getWritableDatabase();
-
         mButton = (Button) findViewById(R.id.login_button);
-       mUsername = (EditText)findViewById(R.id.loginUsername);
+        mUsername = (EditText)findViewById(R.id.loginUsername);
         mPassword = (EditText)findViewById(R.id.loginPassword);
+        notRegged = (TextView)findViewById(R.id.registerLink);
 
-
+        /// temp
          dbTestButton = (Button) findViewById(R.id.DB_button);
 
         //listener for password field, so you can press enter on the virtual
@@ -54,6 +54,17 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
+        // Not registered text "button"
+        notRegged.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View r) {
+
+                Intent intent=new Intent(r.getContext(),RegisterActivity.class);
+                startActivity(intent);
+            }
+        });
+
+
         mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -65,6 +76,7 @@ public class MainActivity extends AppCompatActivity {
         dbTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View l) {
+                //db.getWritableDatabase();
                 //db.addUser("19880315","POL","Hagge","RICK","hmmm");
                 //db.addWalk("555","2015-04-30","19870315");
                 //db.updateWalk("19880315","2015-04-30","9999");

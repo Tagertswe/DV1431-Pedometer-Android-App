@@ -2,4 +2,5 @@
     <string name="app_name">Pedometer-Android-App</string>
     <string name="action_settings">Settings</string>
     <string name="app_name_login">Pedometer-Android-App Login</string>
+    <string name="Register_view">Pedometer-Android-App Login</string>
 </resources>

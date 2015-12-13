@@ -94,6 +94,7 @@ public class Db extends SQLiteOpenHelper
         long returnValue = db.insert(TABLE_USER, null, userValues);
 
         System.out.println("Inserting into table user - check nr: " + returnValue);
+        db.close();
         return returnValue;
     }
 
