@@ -37,6 +37,10 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.pedometer_android_app.Db;
+
+import java.util.Timer;
+import java.util.TimerTask;
 
 
 ///**
@@ -154,10 +158,14 @@ public class StepService extends Service {
         // Start voice
         reloadSettings();
 
+
         // Tell the user we started.
 //        Toast.makeText(this, getText(R.string.started), Toast.LENGTH_SHORT).show();
     }
-    
+
+
+
+
     @Override
     public void onStart(Intent intent, int startId) {
 //        Log.i(TAG, "[SERVICE] onStart");

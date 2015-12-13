@@ -88,12 +88,12 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void checkLogin(){
-        if( mUsername.getText().toString().contentEquals("pol") && mPassword.getText().toString().contentEquals("pol") )
-        {
+//        if( mUsername.getText().toString().contentEquals("pol") && mPassword.getText().toString().contentEquals("pol") )
+//        {
             // inside here check in database
             //Intent mainView = new Intent(MainActivity.this, MainView.class );
             MainActivity.this.startActivity(new Intent(MainActivity.this, MainView.class));
-        }
+//        }
 
     }
 

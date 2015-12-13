@@ -163,7 +163,8 @@ public class Db extends SQLiteOpenHelper
 
     public ArrayList<Walk> getWalkData(String SSN)
     {
-        String clause ="SELECT * FROM "+ TABLE_WALK +" WHERE "+ COLUMN_USER_ID +"="+ SSN;
+//        String clause ="SELECT * FROM "+ TABLE_WALK +" WHERE "+ COLUMN_USER_ID +"="+ SSN;
+        String clause ="SELECT 10 FROM "+ TABLE_WALK +" WHERE "+ COLUMN_USER_ID +"="+ SSN+" ORDER BY "+COLUMN_STEPS+" DESC";
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery(clause,null);
         if(c != null && c.getCount() > 0)

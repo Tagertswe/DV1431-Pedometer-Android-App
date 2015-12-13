@@ -24,6 +24,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import name.bagi.levente.pedometer.PedometerSettings;
 import name.bagi.levente.pedometer.StepService;
 import name.bagi.levente.pedometer.Utils;
@@ -39,10 +42,13 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
     private static final String TAG = "TabFragmentMain";
     private ViewPager viewPager;
 
+    private int mCounter;
     private TabFragmentMain mFragment;
     private Bundle bundle;
 
     private static final int STEPS_MSG = 1;
+    //initializes database connection.
+    public Db db = new Db(this);
 
 
     // Handles incoming message from the StepService
@@ -55,7 +61,11 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
 //                    System.out.println("handlemessage is working sout");
                     mStepValue = (int)msg.arg1;
                     passData(mStepValue);
-
+                    if(mCounter == 10){
+                        passDB(db);
+                        mCounter = 0;
+                    }
+                    mCounter++;
 //                    bundle.putInt(TAG,mStepValue);
 //                    countedSteps.setText("" + mStepValue);
                     break;
@@ -132,7 +142,7 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
+        mCounter = 0;
 
         setContentView(R.layout.main_view_activity);
 
@@ -175,7 +185,7 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
                 // if TabFragmentMain tab is selected, then it contacts the passData() method.
-              if(tab.getPosition() == 0){
+                if (tab.getPosition() == 0) {
                     passData(mStepValue);
                     Log.d(TAG, "this is executed in tab selected for main view!");
                 }
@@ -190,6 +200,16 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+
+
+
+//        //starts timertask for regular called methods.
+//        MyTimerTask myTask = new MyTimerTask();
+//        Timer myTimer = new Timer();
+//
+//        //runs a timertask after 10seconds, with an interval of 1 hour
+//        myTimer.schedule(myTask, 10000, 3600000);
+
     }
 
     @Override
@@ -257,6 +277,7 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
     //This method is called for every stepcounter update.
     @Override
     public void passData(int data) {
+        //TODO optimize battery drain by having this sending only once every 5th step update?
         // assigns mFragment to the existing Fragment for the layout of TabFragmentMain,
         // it's null if there isn't one running.
         mFragment = (TabFragmentMain)getSupportFragmentManager().findFragmentById(R.id.TabFragmentMain_id);
@@ -270,18 +291,52 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
             Log.d(TAG, "passdata in mainview is called! 2");
             // Create fragment and give it an argument for the selected article
               mFragment = TabFragmentMain.newInstance(mStepValue);
-        }
-        // Creates a new transaction for TabFragmentMain fragment, and replaces the current one.
-        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+            // Creates a new transaction for TabFragmentMain fragment, and replaces the current one.
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        // Replace whatever is in the fragment_container view with this fragment,
-        // and add the transaction to the back stack so the user can navigate back
-        transaction.replace(R.id.TabFragmentMain_id, mFragment);
-        transaction.addToBackStack(null);
-        // Commit the transaction
-        transaction.commit();
+            // Replace whatever is in the fragment_container view with this fragment,
+            // and add the transaction to the back stack so the user can navigate back
+            transaction.replace(R.id.TabFragmentMain_id, mFragment);
+            transaction.addToBackStack(null);
+            // Commit the transaction
+            transaction.commit();
+        }
+
+
+        //TODO is this necessary, or can it be disabled?
         //Notifies the viewpager that the fragments have changed.
         viewPager.getAdapter().notifyDataSetChanged();
+    }
+
+    @Override
+    public void passDB(Db db) {
+        TabFragmentHighScore highScoreFragment = (TabFragmentHighScore)getSupportFragmentManager().findFragmentById(R.id.TabFragmentHighScore_id);
+
+        if(highScoreFragment != null){
+            // If it's null, then it stes the textview in TabFragmentMain to an updated value.
+            highScoreFragment.setDB(this.db);
+            Log.d(TAG, "db setup is called, highscorefragment exists!");
+        }
+        else {
+            // Otherwise, we're in the one-pane layout and must swap frags...
+            Log.d(TAG, "db setup is called, highscorefragment will be created!");
+            // Create fragment and give it an argument for the selected article
+            highScoreFragment = new TabFragmentHighScore();
+            // Creates a new transaction for TabFragmentMain fragment, and replaces the current one.
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+
+            // Replace whatever is in the fragment_container view with this fragment,
+            // and add the transaction to the back stack so the user can navigate back
+            transaction.replace(R.id.TabFragmentHighScore_id, highScoreFragment);
+            transaction.addToBackStack(null);
+            // Commit the transaction
+            transaction.commit();
+        }
+
+
+        //TODO is this necessary, or can it be disabled?
+        //Notifies the viewpager that the fragments have changed.
+//        viewPager.getAdapter().notifyDataSetChanged();
     }
 
     // The below class is for the handling of tabs
@@ -329,4 +384,17 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
             return mNumOfTabs;
         }
     }
+
+
+    class MyTimerTask extends TimerTask {
+        public void run() {
+            //passes database for TabFragmentHighScore
+//            passDB(db);
+
+            //TODO implement regular step counter save here to database
+            System.out.println("");
+        }
+    }
+
+
 }
