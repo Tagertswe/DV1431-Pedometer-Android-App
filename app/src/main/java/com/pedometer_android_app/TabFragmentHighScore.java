@@ -22,6 +22,7 @@ public class TabFragmentHighScore extends Fragment {
     private TextView date_steps;
     private TextView steps;
     private View view;
+    private User mCurrentUser;
 
     private static String PACKAGE_NAME;
     @Override
@@ -31,22 +32,31 @@ public class TabFragmentHighScore extends Fragment {
 
         PACKAGE_NAME = getActivity().getPackageName();
 
-
-        printFromDB();
+        mCurrentUser = new User();
+        Bundle extras = getArguments();
+        if (extras != null) {
+            String value = extras.getString("TabFragmentHighScore");
+            mCurrentUser.setSSN(value);
+        }
+        populateHighScore();
             return view;
     }
 
-    public void printFromDB(){
+    public void setmCurrentUser(User mCurrentUser) {
+        this.mCurrentUser = mCurrentUser;
+    }
+
+    public void populateHighScore(){
         Log.d("TabFragmentHighScore", "This is executed in setDB!");
         db.resetDB();
-        this.db.addUser("86", "Martin", "Olsson", "martin", "blaha");
-        DateFormat df = new SimpleDateFormat("MMM d, ''yyyy");
-        String date = df.format(Calendar.getInstance().getTime());
-
-        this.db.addWalk("5000",date, "86");
-        this.db.addWalk("4000",date, "86");
-        this.db.addWalk("7000",date, "86");
-        this.db.addWalk("3000", date, "86");
+//        this.db.addUser("86", "Martin", "Olsson", "martin", "blaha");
+//        DateFormat df = new SimpleDateFormat("MMM d, ''yyyy");
+//        String date = df.format(Calendar.getInstance().getTime());
+//
+//        this.db.addWalk("5000",date, "86");
+//        this.db.addWalk("4000",date, "86");
+//        this.db.addWalk("7000",date, "86");
+//        this.db.addWalk("3000", date, "86");
 
         ArrayList<Walk> walkList = db.getWalkData("86");
 
@@ -69,15 +79,16 @@ public class TabFragmentHighScore extends Fragment {
 
 
 
-    //this method is contact in order to forward updated values of the stepcounter in other classes.
-//    public static TabFragmentHighScore newInstance(int data) {
-//        Log.d(TAG, "newInstance(steps:" + data + ")");
-////        Bundle args = new Bundle();
-////        args.putInt(TAG, data);
-//        TabFragmentHighScore fragment = new TabFragmentHighScore();
-////        fragment.setArguments(args);
-//        return fragment;
-//    }
+    //this method is contacted in order to forward the object of User so high score can be
+    // populated depending on who has logged in
+    public static TabFragmentHighScore newInstance(String data) {
+        Log.d(TAG, "newInstance(ssn:" + data + ")");
+        Bundle args = new Bundle();
+        args.putString(TAG,data);
+        TabFragmentHighScore fragment = new TabFragmentHighScore();
+        fragment.setArguments(args);
+        return fragment;
+    }
 
 
 }

@@ -24,6 +24,9 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -46,6 +49,7 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
     private TabFragmentMain mFragment;
     private Bundle bundle;
 
+    private String mCurrentUserSSN;
     private static final int STEPS_MSG = 1;
     //initializes database connection.
     public Db db = new Db(this);
@@ -60,8 +64,13 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
                     Log.d(TAG, "handlemessage is working");
 //                    System.out.println("handlemessage is working sout");
                     mStepValue = (int)msg.arg1;
+                    //the counter is checked here to slow down the update rate of fragments, so less battery drain will occur
                     if(mCounter == 5){
+                        //pass step data to TabFragmentMain fragment
                         passData(mStepValue);
+                        //updates current step counter value to the database
+                        updateCurrentWalk();
+                        passCurrentUser();
                         mCounter = 0;
                     }
                     mCounter++;
@@ -172,6 +181,11 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
 
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            mCurrentUserSSN = extras.getString("CurrentUser");
+        }
+
 
         final PagerAdapter adapter = new PagerAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
@@ -210,8 +224,35 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
 //
 //        //runs a timertask after 10seconds, with an interval of 1 hour
 //        myTimer.schedule(myTask, 10000, 3600000);
+    }
+
+
+    // adds the ongoing progress of the walk to the database for high score top 10 purposes.
+    public void updateCurrentWalk(){
+        DateFormat df = new SimpleDateFormat("MMM d, ''yyyy");
+        String date = df.format(Calendar.getInstance().getTime());
+
+        if(mCurrentUserSSN != ""){
+            String currSteps = "";
+            try{
+                currSteps = Integer.toString(mStepValue);
+            }catch (NumberFormatException e){
+                e.printStackTrace();
+            }
+
+            // if walk exists, then update an ongoing database row for the current day
+            if(db.walkExist(mCurrentUserSSN, date) == 1){
+                db.updateWalk(mCurrentUserSSN,date,currSteps);
+            }
+            else{
+                db.addWalk(currSteps,date,mCurrentUserSSN);
+            }
+        }
+
 
     }
+
+
 
     @Override
     protected void onPause() {
@@ -309,34 +350,32 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
     }
 
     @Override
-    public void passDB(Db db) {
-//        TabFragmentHighScore highScoreFragment = (TabFragmentHighScore)getSupportFragmentManager().findFragmentById(R.id.TabFragmentHighScore_id);
-//
-//        if(highScoreFragment != null){
-//            // If it's not null, then it sets the textview in TabFragmentMain to an updated value.
-//            highScoreFragment.setDB(this.db);
-//            Log.d(TAG, "db setup is called, highscorefragment exists!");
-//        }
-//        else {
-//            // Otherwise, we're in the one-pane layout and must swap frags...
-//            Log.d(TAG, "db setup is called, highscorefragment will be created!");
-//            // Create fragment and give it an argument for the selected article
-//            highScoreFragment = new TabFragmentHighScore();
-//            // Creates a new transaction for TabFragmentMain fragment, and replaces the current one.
-//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//
-//            // Replace whatever is in the fragment_container view with this fragment,
-//            // and add the transaction to the back stack so the user can navigate back
-//            transaction.replace(R.id.TabFragmentHighScore_id, highScoreFragment);
-//            transaction.addToBackStack(null);
-//            // Commit the transaction
-//            transaction.commit();
-//        }
+    public void passCurrentUser(User user) {
+        TabFragmentHighScore highScoreFragment = (TabFragmentHighScore)getSupportFragmentManager().findFragmentById(R.id.TabFragmentHighScore_id);
 
+        if(highScoreFragment != null){
+            // If it's not null, then it sets the textview in TabFragmentMain to an updated value.
+            highScoreFragment.setmCurrentUser(user);
+            Log.d(TAG, "db setup is called, highscorefragment exists!");
+        }
+        else {
+            // Otherwise, we're in the one-pane layout and must swap frags...
+            Log.d(TAG, "db setup is called, highscorefragment will be created!");
+            // Create fragment and give it an argument for the selected article
+            highScoreFragment = new TabFragmentHighScore();
+            // Creates a new transaction for TabFragmentMain fragment, and replaces the current one.
+            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
 
-        //TODO is this necessary, or can it be disabled?
+            // Replace whatever is in the fragment_container view with this fragment,
+            // and add the transaction to the back stack so the user can navigate back
+            transaction.replace(R.id.TabFragmentHighScore_id, highScoreFragment);
+            transaction.addToBackStack(null);
+            // Commit the transaction
+            transaction.commit();
+        }
+
         //Notifies the viewpager that the fragments have changed.
-//        viewPager.getAdapter().notifyDataSetChanged();
+        viewPager.getAdapter().notifyDataSetChanged();
     }
 
     // The below class is for the handling of tabs

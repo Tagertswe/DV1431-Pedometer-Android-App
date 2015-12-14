@@ -147,6 +147,17 @@ public class Db extends SQLiteOpenHelper
         db.execSQL(CREATE_WALK_TABLE);
     }
 
+    public int walkExist(String SSN, String date){
+        String clause ="SELECT * FROM "+ TABLE_USER +" WHERE "+ COLUMN_ID +"="+ SSN+" AND "+"\""+COLUMN_DATE+"\""+" = "+date;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(clause,null);
+        if(c.moveToFirst())
+        {
+            return 1;
+        }
+        return 0;
+    }
+
     public User getUser(String SSN)
     {
         String clause ="SELECT * FROM "+ TABLE_USER +" WHERE "+ COLUMN_ID +"="+ SSN;

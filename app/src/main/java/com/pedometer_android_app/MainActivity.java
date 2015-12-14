@@ -102,7 +102,9 @@ public class MainActivity extends AppCompatActivity {
         currentUser = db.loginCheck(username,password);
         if(currentUser != null)
         {
-            MainActivity.this.startActivity(new Intent(MainActivity.this, MainView.class));
+            Intent mainView = new Intent(getBaseContext(), MainView.class);
+            mainView.putExtra("CurrentUser",currentUser.getSSN());
+            MainActivity.this.startActivity(mainView);
             return 1;
         }
 
