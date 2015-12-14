@@ -183,12 +183,21 @@ public class Db extends SQLiteOpenHelper
         return null;
     }
 
-    public void loginCheck(String username,String password)
+    public User loginCheck(String username,String password)
     {
-        // loginCheck needs to implemented.
-        // check of username has the password.
-        // password maybe need to be hashed ?
-    }
+        String clause ="SELECT * FROM "+ TABLE_USER +" WHERE "+ COLUMN_USERNAME +"="+ "\""+username+"\"" + " AND " + COLUMN_PASSWORD + "=" + "\""+password+"\"" ;
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(clause, null);
+        if(c.moveToFirst())
+        {
+            User user = new User(c.getString(0),c.getString(1),c.getString(2),c.getString(3),c.getString(4));
+            db.close();
+            return user;
+        }
 
+        db.close();
+        return null;
+
+    }
 
 }

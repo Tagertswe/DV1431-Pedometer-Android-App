@@ -13,19 +13,21 @@
         android:text="PMmeter"
         android:textSize="46dip"
         android:textStyle="bold" />
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="40dp"
+        android:id="@+id/logInStatus"
+        android:layout_gravity="center"
+        android:layout_marginTop="50dp"
         android:layout_row="0"
-        android:id="@+id/steps_test"
-        android:textSize="46dip"
+        android:text=""
+        android:textSize="15dip"
+        android:textColor="#ff0004"
         android:textStyle="bold" />
 
-
     <EditText
-        android:layout_marginTop="120dp"
+        android:layout_marginTop="100dp"
         android:id="@+id/loginUsername"
         android:layout_column="1"
         android:imeOptions="actionNext"
@@ -69,17 +71,6 @@
         android:text="login"
         android:clickable="true"
         android:id="@+id/login_button"
-        android:layout_marginTop="40dp"
-        android:layout_gravity="center_horizontal"
-        android:ems="15"
-        />
-
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="DB"
-        android:clickable="true"
-        android:id="@+id/DB_button"
         android:layout_marginTop="40dp"
         android:layout_gravity="center_horizontal"
         android:ems="15"

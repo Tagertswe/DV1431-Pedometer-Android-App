@@ -15,12 +15,14 @@ import android.widget.TextView;
  */
 
 public class MainActivity extends AppCompatActivity {
+
     Button mButton;
     EditText mUsername;
     EditText mPassword;
     Db db = new Db(this);
     Button dbTestButton;
     TextView notRegged;
+    User currentUser;
 
     protected void onCreate(Bundle savedInstanceState)
     {
@@ -33,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
         notRegged = (TextView)findViewById(R.id.registerLink);
 
         /// temp
-         dbTestButton = (Button) findViewById(R.id.DB_button);
+         //dbTestButton = (Button) findViewById(R.id.DB_button);
 
         //listener for password field, so you can press enter on the virtual
         // keyboard and act as if you were pressing the login button
@@ -53,8 +55,8 @@ public class MainActivity extends AppCompatActivity {
             }
         });
 
-        // Not registered text "button"
-        notRegged.setOnClickListener(new View.OnClickListener() {
+			// Not registered text "button"
+			notRegged.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View r) {
 
@@ -64,14 +66,20 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-        mButton.setOnClickListener(new View.OnClickListener() {
+            mButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                checkLogin();
+
+                if(checkLogin() == 0)
+                {
+                    TextView logInStatus=(TextView)findViewById(R.id.logInStatus);
+                    logInStatus.setText("Wrong username or password,\ntry again!");
+                }
 
             }
         });
 
+		/*
         dbTestButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View l) {
@@ -84,16 +92,21 @@ public class MainActivity extends AppCompatActivity {
                 //db.getWalkData("19880315");
             }
         });
-
+		*/
     }
 
-    public void checkLogin(){
-//        if( mUsername.getText().toString().contentEquals("pol") && mPassword.getText().toString().contentEquals("pol") )
-//        {
-            // inside here check in database
-            //Intent mainView = new Intent(MainActivity.this, MainView.class );
+        public int checkLogin(){
+
+        String username = mUsername.getText().toString();
+        String password = mPassword.getText().toString();
+        currentUser = db.loginCheck(username,password);
+        if(currentUser != null)
+        {
             MainActivity.this.startActivity(new Intent(MainActivity.this, MainView.class));
-//        }
+            return 1;
+        }
+
+        return 0;
 
     }
 
