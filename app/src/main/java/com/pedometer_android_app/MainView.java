@@ -60,15 +60,11 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
                     Log.d(TAG, "handlemessage is working");
 //                    System.out.println("handlemessage is working sout");
                     mStepValue = (int)msg.arg1;
-                    passData(mStepValue);
-                    //TODO disabled in order to merge this with master
-//                    if(mCounter == 10){
-//                        passDB(db);
-//                        mCounter = 0;
-//                    }
-//                    mCounter++;
-//                    bundle.putInt(TAG,mStepValue);
-//                    countedSteps.setText("" + mStepValue);
+                    if(mCounter == 5){
+                        passData(mStepValue);
+                        mCounter = 0;
+                    }
+                    mCounter++;
                     break;
                 default:
                     super.handleMessage(msg);
@@ -190,6 +186,10 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
                     passData(mStepValue);
                     Log.d(TAG, "this is executed in tab selected for main view!");
                 }
+//                else if(tab.getPosition() == 3){
+//                    passDB(db);
+//                    Log.d(TAG, "this is executed in tab selected for main view!");
+//                }
                 viewPager.setCurrentItem(tab.getPosition());
             }
 
@@ -278,7 +278,6 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
     //This method is called for every stepcounter update.
     @Override
     public void passData(int data) {
-        //TODO optimize battery drain by having this sending only once every 5th step update?
         // assigns mFragment to the existing Fragment for the layout of TabFragmentMain,
         // it's null if there isn't one running.
         mFragment = (TabFragmentMain)getSupportFragmentManager().findFragmentById(R.id.TabFragmentMain_id);
@@ -311,28 +310,28 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
 
     @Override
     public void passDB(Db db) {
-        TabFragmentHighScore highScoreFragment = (TabFragmentHighScore)getSupportFragmentManager().findFragmentById(R.id.TabFragmentHighScore_id);
-
-        if(highScoreFragment != null){
-            // If it's null, then it stes the textview in TabFragmentMain to an updated value.
-            highScoreFragment.setDB(this.db);
-            Log.d(TAG, "db setup is called, highscorefragment exists!");
-        }
-        else {
-            // Otherwise, we're in the one-pane layout and must swap frags...
-            Log.d(TAG, "db setup is called, highscorefragment will be created!");
-            // Create fragment and give it an argument for the selected article
-            highScoreFragment = new TabFragmentHighScore();
-            // Creates a new transaction for TabFragmentMain fragment, and replaces the current one.
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the back stack so the user can navigate back
-            transaction.replace(R.id.TabFragmentHighScore_id, highScoreFragment);
-            transaction.addToBackStack(null);
-            // Commit the transaction
-            transaction.commit();
-        }
+//        TabFragmentHighScore highScoreFragment = (TabFragmentHighScore)getSupportFragmentManager().findFragmentById(R.id.TabFragmentHighScore_id);
+//
+//        if(highScoreFragment != null){
+//            // If it's not null, then it sets the textview in TabFragmentMain to an updated value.
+//            highScoreFragment.setDB(this.db);
+//            Log.d(TAG, "db setup is called, highscorefragment exists!");
+//        }
+//        else {
+//            // Otherwise, we're in the one-pane layout and must swap frags...
+//            Log.d(TAG, "db setup is called, highscorefragment will be created!");
+//            // Create fragment and give it an argument for the selected article
+//            highScoreFragment = new TabFragmentHighScore();
+//            // Creates a new transaction for TabFragmentMain fragment, and replaces the current one.
+//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//
+//            // Replace whatever is in the fragment_container view with this fragment,
+//            // and add the transaction to the back stack so the user can navigate back
+//            transaction.replace(R.id.TabFragmentHighScore_id, highScoreFragment);
+//            transaction.addToBackStack(null);
+//            // Commit the transaction
+//            transaction.commit();
+//        }
 
 
         //TODO is this necessary, or can it be disabled?
