@@ -29,8 +29,6 @@ public class TabFragmentSettings extends Fragment {
         aboutButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View r) {
-
-                System.out.println("About!!!");
                 TextView k = (TextView) view.findViewById(R.id.settings_view);
                 k.setText(aboutTest);
             }

@@ -59,7 +59,6 @@ public class TabFragmentMain extends Fragment{
     }
 
 
-
     public void setStepsView(int data){
         mStepValue = data;
         countedSteps.setText(String.valueOf(mStepValue));

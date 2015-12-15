@@ -23,6 +23,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
+import android.widget.TextView;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -50,6 +53,8 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
     //initializes database connection.
     public Db db = new Db(this);
 
+    Button stopButton;
+    Button startButton;
 
     // Handles incoming message from the StepService
     // (accelerometer stepcounter background service handler)
@@ -109,7 +114,7 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
         }
     };
 
-    private void startStepService() {
+    public void startStepService() {
         if (! mIsRunning) {
             Log.i(TAG, "[SERVICE] Start");
             mIsRunning = true;
@@ -118,18 +123,18 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
         }
     }
 
-    private void bindStepService() {
+    public void bindStepService() {
         Log.i(TAG, "[SERVICE] Bind");
         bindService(new Intent(MainView.this,
                 StepService.class), mConnection, Context.BIND_AUTO_CREATE + Context.BIND_DEBUG_UNBIND);
     }
 
-    private void unbindStepService() {
+    public void unbindStepService() {
         Log.i(TAG, "[SERVICE] Unbind");
         unbindService(mConnection);
     }
 
-    private void stopStepService() {
+    public void stopStepService() {
         Log.i(TAG, "[SERVICE] Stop");
         if (mService != null) {
             Log.i(TAG, "[SERVICE] stopService");
@@ -139,12 +144,15 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
         mIsRunning = false;
     }
 
+    public void resetStepValue()
+    {
+        mStepValue = 0;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mCounter = 0;
-
         setContentView(R.layout.main_view_activity);
 
         mStepValue = 0;
