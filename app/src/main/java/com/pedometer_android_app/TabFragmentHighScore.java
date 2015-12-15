@@ -42,8 +42,8 @@ public class TabFragmentHighScore extends Fragment {
             return view;
     }
 
-    public void setmCurrentUser(User mCurrentUser) {
-        this.mCurrentUser = mCurrentUser;
+    public void setmCurrentUser(String ssn) {
+        this.mCurrentUser.setSSN(ssn);
     }
 
     public void populateHighScore(){

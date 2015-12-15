@@ -70,7 +70,7 @@ public class TabFragmentMain extends Fragment{
         void passData(int data);
         // for data passing to TabFragmentHighScore (created it here
         // since I can only implement one interface)
-        void passCurrentUser(User user);
+        void passCurrentUser(String ssn);
     }
 
     @Override

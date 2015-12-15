@@ -70,7 +70,7 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
                         passData(mStepValue);
                         //updates current step counter value to the database
                         updateCurrentWalk();
-                        passCurrentUser();
+                        passCurrentUser(mCurrentUserSSN);
                         mCounter = 0;
                     }
                     mCounter++;
@@ -350,12 +350,12 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
     }
 
     @Override
-    public void passCurrentUser(User user) {
+    public void passCurrentUser(String ssn) {
         TabFragmentHighScore highScoreFragment = (TabFragmentHighScore)getSupportFragmentManager().findFragmentById(R.id.TabFragmentHighScore_id);
 
         if(highScoreFragment != null){
             // If it's not null, then it sets the textview in TabFragmentMain to an updated value.
-            highScoreFragment.setmCurrentUser(user);
+            highScoreFragment.setmCurrentUser(ssn);
             Log.d(TAG, "db setup is called, highscorefragment exists!");
         }
         else {
