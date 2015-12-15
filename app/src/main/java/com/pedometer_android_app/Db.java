@@ -115,6 +115,7 @@ public class Db extends SQLiteOpenHelper
     // returns number of rows affected.
     // returns -1 om inte uppdaterat
     //returns row number that has been updated if works
+    //TODO something fishy here, it returns 0 upon trying to update an existing row.
     public long updateWalk(String SSN,String date,String steps)
     {
         String clause ="\""+date+"\"" + " = " + COLUMN_DATE + " AND " + SSN + " = " + COLUMN_USER_ID;
@@ -149,16 +150,16 @@ public class Db extends SQLiteOpenHelper
         db.execSQL(CREATE_WALK_TABLE);
     }
 
-    public int walkExist(String SSN, String date){
-        String clause ="SELECT * FROM "+ TABLE_USER +" WHERE "+ COLUMN_ID +"="+ SSN+" AND "+"\""+COLUMN_DATE+"\""+" = "+date;
-        SQLiteDatabase db = this.getWritableDatabase();
-        Cursor c = db.rawQuery(clause,null);
-        if(c.moveToFirst())
-        {
-            return 1;
-        }
-        return 0;
-    }
+//    public int walkExist(String SSN, String date){
+//        String clause ="SELECT * FROM "+ TABLE_USER +" WHERE "+ COLUMN_ID +"="+ SSN+" AND "+"\""+COLUMN_DATE+"\""+" = "+date;
+//        SQLiteDatabase db = this.getWritableDatabase();
+//        Cursor c = db.rawQuery(clause,null);
+//        if(c.moveToFirst())
+//        {
+//            return 1;
+//        }
+//        return 0;
+//    }
 
     public User getUser(String SSN)
     {

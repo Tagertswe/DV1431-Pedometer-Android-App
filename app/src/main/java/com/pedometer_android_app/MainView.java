@@ -245,8 +245,11 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
 
             // if walk exists, then update an ongoing database row for the current day
             if(db.updateWalk(mCurrentUserSSN,date,currSteps) != -1){
+                System.out.println("a walk already exists in database!");
+                db.updateWalk(mCurrentUserSSN,date,currSteps);
             }
             else{
+                System.out.println("a new walk has been inserted in database!");
                 db.addWalk(currSteps,date,mCurrentUserSSN);
             }
         }
@@ -309,11 +312,15 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
             mCurrentUserSSN = "";
+            db.close();
             Intent loginView = new Intent(getBaseContext(), MainActivity.class);
             MainView.this.startActivity(loginView);
             return true;
         }
         if (id == R.id.action_exit_application) {
+            stopStepService();
+            unbindStepService();
+            db.close();
             AppExit();
             return true;
         }

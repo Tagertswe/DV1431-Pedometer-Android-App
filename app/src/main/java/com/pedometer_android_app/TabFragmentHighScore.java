@@ -41,6 +41,7 @@ public class TabFragmentHighScore extends Fragment {
         String fetch = ((MainView)getActivity()).getCurrentUser();
         mCurrentUser.setSSN(fetch);
 
+        System.out.println("current fetched SSN is: "+mCurrentUser.getSSN());
         populateHighScore();
             return view;
     }
