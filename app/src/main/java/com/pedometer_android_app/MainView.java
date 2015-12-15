@@ -73,7 +73,7 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
                         updateCurrentWalk();
                         //passes the ssn of the current logged in user to TabFragmentHighScore so
                         //the top 10 can be populated.
-                        passCurrentUser(mCurrentUserSSN);
+//                        passCurrentUser(mCurrentUserSSN);
                         mCounter = 0;
                     }
                     mCounter++;
@@ -308,15 +308,18 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
+            mCurrentUserSSN = "";
+            Intent loginView = new Intent(getBaseContext(), MainActivity.class);
+            MainView.this.startActivity(loginView);
             return true;
         }
         if (id == R.id.action_exit_application) {
+            AppExit();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
-
 
     //This method is called for every stepcounter update.
     @Override
@@ -345,41 +348,40 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
             transaction.commit();
         }
 
-
-        //TODO is this necessary, or can it be disabled?
         //Notifies the viewpager that the fragments have changed.
         viewPager.getAdapter().notifyDataSetChanged();
     }
 
     @Override
-    public void passCurrentUser(String ssn) {
-        TabFragmentHighScore highScoreFragment = (TabFragmentHighScore)getSupportFragmentManager().findFragmentById(R.id.TabFragmentHighScore_id);
-
-        if(highScoreFragment != null){
-            // If it's not null, then it sets the textview in TabFragmentMain to an updated value.
-            highScoreFragment.setmCurrentUser(ssn);
-            Log.d(TAG, "db setup is called, highscorefragment exists!");
-        }
-        else {
-            // Otherwise, we're in the one-pane layout and must swap frags...
-            Log.d(TAG, "db setup is called, highscorefragment will be created!");
-            // Create fragment and give it an argument for the selected article
-
-            //TODO MAKE INSTANCE OF THIS IN TABFRAGMENTHIGHSCORE!
-            highScoreFragment = new TabFragmentHighScore();
-            // Creates a new transaction for TabFragmentMain fragment, and replaces the current one.
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the back stack so the user can navigate back
-            transaction.replace(R.id.TabFragmentHighScore_id, highScoreFragment);
-            transaction.addToBackStack(null);
-            // Commit the transaction
-            transaction.commit();
-        }
+    public String getCurrentUser() {
+//        TabFragmentHighScore highScoreFragment = (TabFragmentHighScore)getSupportFragmentManager().findFragmentById(R.id.TabFragmentHighScore_id);
+//
+//        if(highScoreFragment != null){
+//            // If it's not null, then it sets the textview in TabFragmentMain to an updated value.
+//            highScoreFragment.setmCurrentUser(ssn);
+//            Log.d(TAG, "db setup is called, highscorefragment exists!");
+//        }
+//        else {
+//            // Otherwise, we're in the one-pane layout and must swap frags...
+//            Log.d(TAG, "db setup is called, highscorefragment will be created!");
+//            // Create fragment and give it an argument for the selected article
+//
+//
+//            highScoreFragment = TabFragmentHighScore.newInstance(mCurrentUserSSN);
+//            // Creates a new transaction for TabFragmentMain fragment, and replaces the current one.
+//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
+//
+//            // Replace whatever is in the fragment_container view with this fragment,
+//            // and add the transaction to the back stack so the user can navigate back
+//            transaction.replace(R.id.TabFragmentHighScore_id, highScoreFragment);
+//            transaction.addToBackStack(null);
+//            // Commit the transaction
+//            transaction.commit();
+//        }
 
         //Notifies the viewpager that the fragments have changed.
 //        viewPager.getAdapter().notifyDataSetChanged();
+        return mCurrentUserSSN;
     }
 
     // The below class is for the handling of tabs
@@ -429,15 +431,23 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
     }
 
 
-    class MyTimerTask extends TimerTask {
-        public void run() {
-            //passes database for TabFragmentHighScore
-//            passDB(db);
+//    class MyTimerTask extends TimerTask {
+//        public void run() {
+//            //passes database for TabFragmentHighScore
+////            passDB(db);
+//
+//            //TODO implement regular step counter save here to database
+//            System.out.println("");
+//        }
+//    }
 
-            //TODO implement regular step counter save here to database
-            System.out.println("");
-        }
-    }
+    public void AppExit(){
+        this.finish();
+        Intent intent = new Intent(Intent.ACTION_MAIN);
+        intent.addCategory(Intent.CATEGORY_HOME);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        startActivity(intent);
+    }//close method
 
 
 }

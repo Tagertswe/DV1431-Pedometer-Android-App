@@ -33,11 +33,14 @@ public class TabFragmentHighScore extends Fragment {
         PACKAGE_NAME = getActivity().getPackageName();
 
         mCurrentUser = new User();
-        Bundle extras = getArguments();
-        if (extras != null) {
-            String value = extras.getString("TabFragmentHighScore");
-            mCurrentUser.setSSN(value);
-        }
+//        Bundle extras = getArguments();
+//        if (extras != null) {
+//            String value = extras.getString("TabFragmentHighScore");
+//            mCurrentUser.setSSN(value);
+//        }
+        String fetch = ((MainView)getActivity()).getCurrentUser();
+        mCurrentUser.setSSN(fetch);
+
         populateHighScore();
             return view;
     }
@@ -48,7 +51,7 @@ public class TabFragmentHighScore extends Fragment {
 
     public void populateHighScore(){
         Log.d("TabFragmentHighScore", "This is executed in setDB!");
-        db.resetDB();
+//        db.resetDB();
 //        this.db.addUser("86", "Martin", "Olsson", "martin", "blaha");
 //        DateFormat df = new SimpleDateFormat("MMM d, ''yyyy");
 //        String date = df.format(Calendar.getInstance().getTime());
@@ -60,6 +63,7 @@ public class TabFragmentHighScore extends Fragment {
 
         ArrayList<Walk> walkList = db.getWalkData(mCurrentUser.getSSN());
 
+        System.out.println("size for walklist is: "+walkList.size());
         for(int i=0; i< walkList.size(); i++) {
             //fetches current id number for steps textview
             int resID = getResources().getIdentifier("no_" + i + "_steps", "id", PACKAGE_NAME);
