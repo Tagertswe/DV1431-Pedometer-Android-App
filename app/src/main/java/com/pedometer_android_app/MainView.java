@@ -65,11 +65,14 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
 //                    System.out.println("handlemessage is working sout");
                     mStepValue = (int)msg.arg1;
                     //the counter is checked here to slow down the update rate of fragments, so less battery drain will occur
+
+                    //pass step data to TabFragmentMain fragment
+                    passData(mStepValue);
                     if(mCounter == 5){
-                        //pass step data to TabFragmentMain fragment
-                        passData(mStepValue);
-                        //updates current step counter value to the database
+                        //updates current step counter value for current logged in user to the database
                         updateCurrentWalk();
+                        //passes the ssn of the current logged in user to TabFragmentHighScore so
+                        //the top 10 can be populated.
                         passCurrentUser(mCurrentUserSSN);
                         mCounter = 0;
                     }
@@ -241,8 +244,7 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
             }
 
             // if walk exists, then update an ongoing database row for the current day
-            if(db.walkExist(mCurrentUserSSN, date) == 1){
-                db.updateWalk(mCurrentUserSSN,date,currSteps);
+            if(db.updateWalk(mCurrentUserSSN,date,currSteps) != -1){
             }
             else{
                 db.addWalk(currSteps,date,mCurrentUserSSN);
@@ -362,6 +364,8 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
             // Otherwise, we're in the one-pane layout and must swap frags...
             Log.d(TAG, "db setup is called, highscorefragment will be created!");
             // Create fragment and give it an argument for the selected article
+
+            //TODO MAKE INSTANCE OF THIS IN TABFRAGMENTHIGHSCORE!
             highScoreFragment = new TabFragmentHighScore();
             // Creates a new transaction for TabFragmentMain fragment, and replaces the current one.
             FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
@@ -375,7 +379,7 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
         }
 
         //Notifies the viewpager that the fragments have changed.
-        viewPager.getAdapter().notifyDataSetChanged();
+//        viewPager.getAdapter().notifyDataSetChanged();
     }
 
     // The below class is for the handling of tabs

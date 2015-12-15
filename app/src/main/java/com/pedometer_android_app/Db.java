@@ -113,6 +113,8 @@ public class Db extends SQLiteOpenHelper
     }
 
     // returns number of rows affected.
+    // returns -1 om inte uppdaterat
+    //returns row number that has been updated if works
     public long updateWalk(String SSN,String date,String steps)
     {
         String clause ="\""+date+"\"" + " = " + COLUMN_DATE + " AND " + SSN + " = " + COLUMN_USER_ID;
@@ -176,12 +178,13 @@ public class Db extends SQLiteOpenHelper
     {
 //        String clause ="SELECT * FROM "+ TABLE_WALK +" WHERE "+ COLUMN_USER_ID +"="+ SSN;
 //        String clause ="SELECT 10 FROM "+ TABLE_WALK +" WHERE "+ COLUMN_USER_ID +"="+ SSN+" ORDER BY "+COLUMN_STEPS+" DESC";
-        String clause ="SELECT * FROM "+ TABLE_WALK +" WHERE "+ COLUMN_USER_ID +"="+ SSN+" ORDER BY "+"\""+COLUMN_STEPS+"\""+" DESC "+" LIMIT 10";
+        String clause ="SELECT * FROM "+ TABLE_WALK +" WHERE "+ COLUMN_USER_ID +"="+ SSN+" ORDER BY "+"\""+COLUMN_STEPS+"\""+" DESC"+" LIMIT 10";
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor c = db.rawQuery(clause,null);
+        Cursor c = db.rawQuery(clause, null);
+        ArrayList<Walk> walkList = new ArrayList<Walk>();
         if(c != null && c.getCount() > 0)
         {
-            ArrayList<Walk> walkList = new ArrayList<Walk>();
+
 
             while(c.moveToNext())
             {
@@ -192,7 +195,7 @@ public class Db extends SQLiteOpenHelper
             return walkList;
         }
 
-        return null;
+        return walkList;
     }
 
     public User loginCheck(String username,String password)

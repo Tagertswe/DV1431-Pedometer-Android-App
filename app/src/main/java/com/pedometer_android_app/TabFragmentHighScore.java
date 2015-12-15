@@ -58,7 +58,7 @@ public class TabFragmentHighScore extends Fragment {
 //        this.db.addWalk("7000",date, "86");
 //        this.db.addWalk("3000", date, "86");
 
-        ArrayList<Walk> walkList = db.getWalkData("86");
+        ArrayList<Walk> walkList = db.getWalkData(mCurrentUser.getSSN());
 
         for(int i=0; i< walkList.size(); i++) {
             //fetches current id number for steps textview
