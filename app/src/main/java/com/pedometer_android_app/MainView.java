@@ -27,6 +27,9 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Timer;
 import java.util.TimerTask;
 
@@ -49,6 +52,7 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
     private TabFragmentMain mFragment;
     private Bundle bundle;
 
+    private String mCurrentUserSSN;
     private static final int STEPS_MSG = 1;
     //initializes database connection.
     public Db db = new Db(this);
@@ -65,15 +69,19 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
                     Log.d(TAG, "handlemessage is working");
 //                    System.out.println("handlemessage is working sout");
                     mStepValue = (int)msg.arg1;
+                    //the counter is checked here to slow down the update rate of fragments, so less battery drain will occur
+
+                    //pass step data to TabFragmentMain fragment
                     passData(mStepValue);
-                    //TODO disabled in order to merge this with master
-//                    if(mCounter == 10){
-//                        passDB(db);
-//                        mCounter = 0;
-//                    }
-//                    mCounter++;
-//                    bundle.putInt(TAG,mStepValue);
-//                    countedSteps.setText("" + mStepValue);
+                    if(mCounter == 5){
+                        //updates current step counter value for current logged in user to the database
+                        updateCurrentWalk();
+                        //passes the ssn of the current logged in user to TabFragmentHighScore so
+                        //the top 10 can be populated.
+//                        passCurrentUser(mCurrentUserSSN);
+                        mCounter = 0;
+                    }
+                    mCounter++;
                     break;
                 default:
                     super.handleMessage(msg);
@@ -185,6 +193,11 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
         tabLayout.setTabGravity(TabLayout.GRAVITY_FILL);
 
 
+        Bundle extras = getIntent().getExtras();
+        if(extras != null){
+            mCurrentUserSSN = extras.getString("CurrentUser");
+        }
+
 
         final PagerAdapter adapter = new PagerAdapter
                 (getSupportFragmentManager(), tabLayout.getTabCount());
@@ -210,16 +223,37 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
+    }
 
 
+    // adds the ongoing progress of the walk to the database for high score top 10 purposes.
+    public void updateCurrentWalk(){
+        DateFormat df = new SimpleDateFormat("MMM d, ''yyyy");
+        String date = df.format(Calendar.getInstance().getTime());
 
-//        //starts timertask for regular called methods.
-//        MyTimerTask myTask = new MyTimerTask();
-//        Timer myTimer = new Timer();
-//
-//        //runs a timertask after 10seconds, with an interval of 1 hour
-//        myTimer.schedule(myTask, 10000, 3600000);
+        if(mCurrentUserSSN != ""){
+            String currSteps = "";
+            try{
+                currSteps = Integer.toString(mStepValue);
+            }catch (NumberFormatException e){
+                e.printStackTrace();
+            }
 
+            //checks if a walk exists, returns 1 if it does, else it returns 0.
+            long check2 = db.walkExist(mCurrentUserSSN,date);
+            System.out.println("value from walkExist is: "+check2);
+            //updates a current walk if it exists
+            if(check2 != 0){
+                System.out.println("a walk already exists in database!");
+                long check = db.updateWalk(mCurrentUserSSN,date,currSteps);
+                System.out.println("return value of updatewalk is: "+check);
+            }
+            //if it doesn't exist, then it adds a walk to the database.
+            else{
+                System.out.println("a new walk has been inserted in database!");
+                db.addWalk(currSteps,date,mCurrentUserSSN);
+            }
+        }
     }
 
     @Override
@@ -230,7 +264,6 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
             unbindStepService();
         }
     }
-
 
     @Override
     protected void onResume() {
@@ -274,20 +307,23 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
+            mCurrentUserSSN = "";
+            BackToLogin();
             return true;
         }
         if (id == R.id.action_exit_application) {
+            stopStepService();
+            unbindStepService();
+            AppExit();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
     }
 
-
     //This method is called for every stepcounter update.
     @Override
     public void passData(int data) {
-        //TODO optimize battery drain by having this sending only once every 5th step update?
         // assigns mFragment to the existing Fragment for the layout of TabFragmentMain,
         // it's null if there isn't one running.
         mFragment = (TabFragmentMain)getSupportFragmentManager().findFragmentById(R.id.TabFragmentMain_id);
@@ -312,41 +348,15 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
             transaction.commit();
         }
 
-
-        //TODO is this necessary, or can it be disabled?
         //Notifies the viewpager that the fragments have changed.
         viewPager.getAdapter().notifyDataSetChanged();
     }
 
+    //returns the current user that is logged in for the high score fragment which in turns calls this
+    //method
     @Override
-    public void passDB(Db db) {
-        TabFragmentHighScore highScoreFragment = (TabFragmentHighScore)getSupportFragmentManager().findFragmentById(R.id.TabFragmentHighScore_id);
-
-        if(highScoreFragment != null){
-            // If it's null, then it stes the textview in TabFragmentMain to an updated value.
-            highScoreFragment.setDB(this.db);
-            Log.d(TAG, "db setup is called, highscorefragment exists!");
-        }
-        else {
-            // Otherwise, we're in the one-pane layout and must swap frags...
-            Log.d(TAG, "db setup is called, highscorefragment will be created!");
-            // Create fragment and give it an argument for the selected article
-            highScoreFragment = new TabFragmentHighScore();
-            // Creates a new transaction for TabFragmentMain fragment, and replaces the current one.
-            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-
-            // Replace whatever is in the fragment_container view with this fragment,
-            // and add the transaction to the back stack so the user can navigate back
-            transaction.replace(R.id.TabFragmentHighScore_id, highScoreFragment);
-            transaction.addToBackStack(null);
-            // Commit the transaction
-            transaction.commit();
-        }
-
-
-        //TODO is this necessary, or can it be disabled?
-        //Notifies the viewpager that the fragments have changed.
-//        viewPager.getAdapter().notifyDataSetChanged();
+    public String getCurrentUser() {
+        return mCurrentUserSSN;
     }
 
     // The below class is for the handling of tabs
@@ -356,8 +366,6 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
 
         public PagerAdapter(android.support.v4.app.FragmentManager fm, int NumOfTabs) {
             super(fm);
-
-
             this.mNumOfTabs = NumOfTabs;
         }
 
@@ -396,15 +404,21 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
     }
 
 
-    class MyTimerTask extends TimerTask {
-        public void run() {
-            //passes database for TabFragmentHighScore
-//            passDB(db);
 
-            //TODO implement regular step counter save here to database
-            System.out.println("");
-        }
-    }
+    public void AppExit(){
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("EXIT", true);
+        startActivity(intent);
+
+    }//close method
+
+    public void BackToLogin(){
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+
+    }//close method
 
 
 }

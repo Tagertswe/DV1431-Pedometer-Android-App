@@ -27,6 +27,12 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState)
     {
         super.onCreate(savedInstanceState);
+
+        //exits the first activity if a call to exit the program has been initiated.
+        if (getIntent().getBooleanExtra("EXIT", false)) {
+            finish();
+        }
+
         setContentView(R.layout.activity_main);
 
         mButton = (Button) findViewById(R.id.login_button);
@@ -78,21 +84,6 @@ public class MainActivity extends AppCompatActivity {
 
             }
         });
-
-		/*
-        dbTestButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View l) {
-                //db.getWritableDatabase();
-                //db.addUser("19880315","POL","Hagge","RICK","hmmm");
-                //db.addWalk("555","2015-04-30","19870315");
-                //db.updateWalk("19880315","2015-04-30","9999");
-                //db.deleteUser("19880315");
-                //db.getUser("19880315");
-                //db.getWalkData("19880315");
-            }
-        });
-		*/
     }
 
         public int checkLogin(){
@@ -102,7 +93,9 @@ public class MainActivity extends AppCompatActivity {
         currentUser = db.loginCheck(username,password);
         if(currentUser != null)
         {
-            MainActivity.this.startActivity(new Intent(MainActivity.this, MainView.class));
+            Intent mainView = new Intent(getBaseContext(), MainView.class);
+            mainView.putExtra("CurrentUser",currentUser.getSSN());
+            MainActivity.this.startActivity(mainView);
             return 1;
         }
 

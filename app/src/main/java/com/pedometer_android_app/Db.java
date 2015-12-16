@@ -112,12 +112,17 @@ public class Db extends SQLiteOpenHelper
         long returnValue = db.insert(TABLE_WALK, null, walkValues);
 
         System.out.println("Inserting into table walk - check nr: " + returnValue);
+        db.close();
         return returnValue;
     }
 
     // returns number of rows affected.
+    // returns -1 om inte uppdaterat
+    //returns row number that has been updated if works
+    //TODO something fishy here, it returns 0 upon trying to update an existing row.
     public long updateWalk(String SSN,String date,String steps)
     {
+//        String clause ="\""+date+"\"" + " = " + COLUMN_DATE + " AND " + SSN + " = " + COLUMN_USER_ID;
         String clause ="\""+date+"\"" + " = " + COLUMN_DATE + " AND " + SSN + " = " + COLUMN_USER_ID;
         ContentValues walkUpdateValues = new ContentValues();
         walkUpdateValues.put(COLUMN_STEPS, steps);
@@ -127,6 +132,7 @@ public class Db extends SQLiteOpenHelper
         SQLiteDatabase db = this.getWritableDatabase();
         long returnValue = db.update(TABLE_WALK, walkUpdateValues, clause, null);
         System.out.println("Updating table walk - check nr: " + returnValue);
+        db.close();
         return returnValue;
     }
     // this method keeps the saved walk data,only deletes user profile.
@@ -137,6 +143,7 @@ public class Db extends SQLiteOpenHelper
         SQLiteDatabase db = this.getWritableDatabase();
         long returnValue = db.delete(TABLE_USER, clause, null);
         System.out.println("Deleting user - check nr: " + returnValue);
+        db.close();
         return returnValue;
     }
 
@@ -148,6 +155,20 @@ public class Db extends SQLiteOpenHelper
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
         db.execSQL(CREATE_USER_TABLE);
         db.execSQL(CREATE_WALK_TABLE);
+        db.close();
+    }
+
+    public int walkExist(String SSN, String date){
+        String clause ="SELECT * FROM "+ TABLE_WALK +" WHERE "+ COLUMN_USER_ID +"="+ SSN+" AND "+"\""+COLUMN_DATE+"\""+" = "+"\""+date+"\"";
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(clause,null);
+        if(c.moveToFirst())
+        {
+            db.close();
+            return 1;
+        }
+        db.close();
+        return 0;
     }
 
     public User getUser(String SSN)
@@ -158,32 +179,34 @@ public class Db extends SQLiteOpenHelper
         if(c.moveToFirst())
         {
             User user = new User(c.getString(0),c.getString(1),c.getString(2),c.getString(3),c.getString(4));
+            db.close();
             return user;
         }
-
+        db.close();
         return null;
     }
 
+    //fetches a maximum of 10 elements from the database, for the highscore view
     public ArrayList<Walk> getWalkData(String SSN)
     {
-//        String clause ="SELECT * FROM "+ TABLE_WALK +" WHERE "+ COLUMN_USER_ID +"="+ SSN;
-        String clause ="SELECT 10 FROM "+ TABLE_WALK +" WHERE "+ COLUMN_USER_ID +"="+ SSN+" ORDER BY "+COLUMN_STEPS+" DESC";
+        String clause ="SELECT * FROM "+ TABLE_WALK +" WHERE "+ COLUMN_USER_ID +"="+ SSN+" ORDER BY "+"\""+COLUMN_STEPS+"\""+" DESC"+" LIMIT 10";
         SQLiteDatabase db = this.getWritableDatabase();
-        Cursor c = db.rawQuery(clause,null);
+        Cursor c = db.rawQuery(clause, null);
+        ArrayList<Walk> walkList = new ArrayList<Walk>();
         if(c != null && c.getCount() > 0)
         {
-            ArrayList<Walk> walkList = new ArrayList<Walk>();
+
 
             while(c.moveToNext())
             {
                Walk walk = new Walk(c.getString(1),c.getString(2),c.getString(3));
                walkList.add(walk);
             }
-
+            db.close();
             return walkList;
         }
-
-        return null;
+        db.close();
+        return walkList;
     }
 
     public User loginCheck(String username,String password)

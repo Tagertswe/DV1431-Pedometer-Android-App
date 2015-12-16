@@ -6,6 +6,8 @@ package com.pedometer_android_app;
 public class User
 {
 
+
+
     private String SSN;
     private String name;
     private String surname;
@@ -19,6 +21,15 @@ public class User
         this.surname = surname;
         this.username = username;
         this.password = password;
+    }
+
+    public User()
+    {
+        this.SSN = "";
+        this.name = "";
+        this.surname = "";
+        this.username = "";
+        this.password = "";
     }
 
     public String getSSN()
@@ -39,6 +50,10 @@ public class User
     public String getPassword()
     {
         return password;
+    }
+
+    public void setSSN(String SSN) {
+        this.SSN = SSN;
     }
 
 
