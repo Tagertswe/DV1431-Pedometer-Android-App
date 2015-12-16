@@ -203,10 +203,6 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
                     passData(mStepValue);
                     Log.d(TAG, "this is executed in tab selected for main view!");
                 }
-//                else if(tab.getPosition() == 3){
-//                    passDB(db);
-//                    Log.d(TAG, "this is executed in tab selected for main view!");
-//                }
                 viewPager.setCurrentItem(tab.getPosition());
             }
 
@@ -218,15 +214,6 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
             public void onTabReselected(TabLayout.Tab tab) {
             }
         });
-
-
-
-//        //starts timertask for regular called methods.
-//        MyTimerTask myTask = new MyTimerTask();
-//        Timer myTimer = new Timer();
-//
-//        //runs a timertask after 10seconds, with an interval of 1 hour
-//        myTimer.schedule(myTask, 10000, 3600000);
     }
 
 
@@ -244,9 +231,13 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
             }
 
             // if walk exists, then update an ongoing database row for the current day
-            if(db.updateWalk(mCurrentUserSSN,date,currSteps) != -1){
+            db.resetDB();
+            long check2 = db.walkExist(mCurrentUserSSN,date);
+            System.out.println("value from walkExist is: "+check2);
+            if(check2 != 0){
                 System.out.println("a walk already exists in database!");
-                db.updateWalk(mCurrentUserSSN,date,currSteps);
+                long check = db.updateWalk(mCurrentUserSSN,date,currSteps);
+                System.out.println("return value of updatewalk is: "+check);
             }
             else{
                 System.out.println("a new walk has been inserted in database!");
@@ -312,7 +303,7 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
             mCurrentUserSSN = "";
-            db.close();
+
             Intent loginView = new Intent(getBaseContext(), MainActivity.class);
             MainView.this.startActivity(loginView);
             return true;
@@ -320,7 +311,6 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
         if (id == R.id.action_exit_application) {
             stopStepService();
             unbindStepService();
-            db.close();
             AppExit();
             return true;
         }

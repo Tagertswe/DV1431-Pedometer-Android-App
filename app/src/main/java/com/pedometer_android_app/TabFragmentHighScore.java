@@ -33,11 +33,7 @@ public class TabFragmentHighScore extends Fragment {
         PACKAGE_NAME = getActivity().getPackageName();
 
         mCurrentUser = new User();
-//        Bundle extras = getArguments();
-//        if (extras != null) {
-//            String value = extras.getString("TabFragmentHighScore");
-//            mCurrentUser.setSSN(value);
-//        }
+
         String fetch = ((MainView)getActivity()).getCurrentUser();
         mCurrentUser.setSSN(fetch);
 
