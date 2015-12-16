@@ -11,7 +11,7 @@
         android:text="80"
         android:textSize="90dp"
         android:layout_width="wrap_content"
-        android:layout_marginTop="100px"
+        android:layout_marginTop="40dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
@@ -21,21 +21,21 @@
         android:layout_gravity="center"
         android:text="Steps"
         android:textSize="30dp"
-        android:layout_marginLeft="280px"
+        android:layout_marginLeft="100dp"
         android:layout_width="wrap_content"
-        android:layout_marginTop="140px"
+        android:layout_marginTop="70dp"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
     <TextView
         android:id="@+id/mainView_headline"
-        android:text="Welcome back"
+        android:text="Welcome back!"
         android:textStyle="bold"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="400px"
+        android:layout_marginBottom="200dp"
         android:layout_centerInParent="true"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
@@ -46,7 +46,7 @@
         android:layout_gravity="center"
         android:textStyle="bold"
         android:layout_alignRight="@id/mainView_headline"
-        android:layout_marginBottom="280px"
+        android:layout_marginBottom="280dp"
         android:layout_centerInParent="true"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
@@ -54,11 +54,11 @@
         android:id="@+id/mainView_latest_progress_headline"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="20px"
+        android:layout_marginLeft="20dp"
         android:text="Your latest progress:"
         android:textStyle="italic"
         android:layout_alignRight="@id/mainView_headline"
-        android:layout_marginTop="600px"
+        android:layout_marginTop="180dp"
         android:layout_centerInParent="true"
         android:textAppearance="?android:attr/textAppearanceLarge"/>
 
