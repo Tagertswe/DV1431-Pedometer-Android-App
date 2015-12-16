@@ -65,7 +65,7 @@ public class TabFragmentPedometer extends Fragment {
             @Override
             public void onClick(View r) {
 
-                ((MainView)getActivity()).resetStepValue();
+                ((MainView)getActivity()).resetStep();
             }
         });
 

@@ -114,6 +114,12 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
         }
     };
 
+    public void resetStep()
+    {
+        mService.resetStepCounter();
+        mStepValue = 0;
+    }
+
     public void startStepService() {
         if (! mIsRunning) {
             Log.i(TAG, "[SERVICE] Start");
@@ -142,11 +148,6 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
                     StepService.class));
         }
         mIsRunning = false;
-    }
-
-    public void resetStepValue()
-    {
-        mStepValue = 0;
     }
 
     @Override

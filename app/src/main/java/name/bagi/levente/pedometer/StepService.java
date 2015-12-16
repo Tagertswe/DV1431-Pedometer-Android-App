@@ -86,6 +86,13 @@ public class StepService extends Service {
      * runs in the same process as its clients, we don't need to deal with
      * IPC.
      */
+
+    public void resetStepCounter()
+    {
+        mSteps = 0;
+        resetValues();
+    }
+
     public class StepBinder extends Binder {
         public StepService getService() {
             return StepService.this;
@@ -288,10 +295,10 @@ public class StepService extends Service {
     
     public void resetValues() {
         mStepDisplayer.setSteps(0);
-        mPaceNotifier.setPace(0);
-        mDistanceNotifier.setDistance(0);
-        mSpeedNotifier.setSpeed(0);
-        mCaloriesNotifier.setCalories(0);
+        //mPaceNotifier.setPace(0);
+        //mDistanceNotifier.setDistance(0);
+        //mSpeedNotifier.setSpeed(0);
+        //mCaloriesNotifier.setCalories(0);
     }
     
     /**
