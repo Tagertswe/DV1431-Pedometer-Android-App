@@ -16,6 +16,8 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 /**
@@ -90,7 +92,8 @@ public class Db extends SQLiteOpenHelper
         userValues.put(COLUMN_NAME, name);
         userValues.put(COLUMN_SURNAME, surname);
         userValues.put(COLUMN_USERNAME, username);
-        userValues.put(COLUMN_PASSWORD, password);
+        String  hashedPass = md5(password);
+        userValues.put(COLUMN_PASSWORD, hashedPass);
         long returnValue = db.insert(TABLE_USER, null, userValues);
 
         System.out.println("Inserting into table user - check nr: " + returnValue);
@@ -185,7 +188,8 @@ public class Db extends SQLiteOpenHelper
 
     public User loginCheck(String username,String password)
     {
-        String clause ="SELECT * FROM "+ TABLE_USER +" WHERE "+ COLUMN_USERNAME +"="+ "\""+username+"\"" + " AND " + COLUMN_PASSWORD + "=" + "\""+password+"\"" ;
+        String  hashedPass = md5(password);
+        String clause ="SELECT * FROM "+ TABLE_USER +" WHERE "+ COLUMN_USERNAME +"="+ "\""+username+"\"" + " AND " + COLUMN_PASSWORD + "=" + "\""+hashedPass+"\"" ;
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery(clause, null);
         if(c.moveToFirst())
@@ -197,6 +201,27 @@ public class Db extends SQLiteOpenHelper
 
         db.close();
         return null;
+
+    }
+
+
+    private static String md5(String s) { try {
+
+        // Create MD5 Hash
+        MessageDigest digest = java.security.MessageDigest.getInstance("MD5");
+        digest.update(s.getBytes());
+        byte messageDigest[] = digest.digest();
+
+        // Create Hex String
+        StringBuffer hexString = new StringBuffer();
+        for (int i=0; i<messageDigest.length; i++)
+            hexString.append(Integer.toHexString(0xFF & messageDigest[i]));
+        return hexString.toString();
+
+    } catch (NoSuchAlgorithmException e) {
+        e.printStackTrace();
+    }
+        return "";
 
     }
 
