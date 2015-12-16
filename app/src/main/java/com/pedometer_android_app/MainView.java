@@ -239,25 +239,22 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
                 e.printStackTrace();
             }
 
-            // if walk exists, then update an ongoing database row for the current day
-            db.resetDB();
+            //checks if a walk exists, returns 1 if it does, else it returns 0.
             long check2 = db.walkExist(mCurrentUserSSN,date);
             System.out.println("value from walkExist is: "+check2);
+            //updates a current walk if it exists
             if(check2 != 0){
                 System.out.println("a walk already exists in database!");
                 long check = db.updateWalk(mCurrentUserSSN,date,currSteps);
                 System.out.println("return value of updatewalk is: "+check);
             }
+            //if it doesn't exist, then it adds a walk to the database.
             else{
                 System.out.println("a new walk has been inserted in database!");
                 db.addWalk(currSteps,date,mCurrentUserSSN);
             }
         }
-
-
     }
-
-
 
     @Override
     protected void onPause() {
@@ -267,7 +264,6 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
             unbindStepService();
         }
     }
-
 
     @Override
     protected void onResume() {
@@ -312,9 +308,7 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_logout) {
             mCurrentUserSSN = "";
-
-            Intent loginView = new Intent(getBaseContext(), MainActivity.class);
-            MainView.this.startActivity(loginView);
+            BackToLogin();
             return true;
         }
         if (id == R.id.action_exit_application) {
@@ -358,35 +352,10 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
         viewPager.getAdapter().notifyDataSetChanged();
     }
 
+    //returns the current user that is logged in for the high score fragment which in turns calls this
+    //method
     @Override
     public String getCurrentUser() {
-//        TabFragmentHighScore highScoreFragment = (TabFragmentHighScore)getSupportFragmentManager().findFragmentById(R.id.TabFragmentHighScore_id);
-//
-//        if(highScoreFragment != null){
-//            // If it's not null, then it sets the textview in TabFragmentMain to an updated value.
-//            highScoreFragment.setmCurrentUser(ssn);
-//            Log.d(TAG, "db setup is called, highscorefragment exists!");
-//        }
-//        else {
-//            // Otherwise, we're in the one-pane layout and must swap frags...
-//            Log.d(TAG, "db setup is called, highscorefragment will be created!");
-//            // Create fragment and give it an argument for the selected article
-//
-//
-//            highScoreFragment = TabFragmentHighScore.newInstance(mCurrentUserSSN);
-//            // Creates a new transaction for TabFragmentMain fragment, and replaces the current one.
-//            FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
-//
-//            // Replace whatever is in the fragment_container view with this fragment,
-//            // and add the transaction to the back stack so the user can navigate back
-//            transaction.replace(R.id.TabFragmentHighScore_id, highScoreFragment);
-//            transaction.addToBackStack(null);
-//            // Commit the transaction
-//            transaction.commit();
-//        }
-
-        //Notifies the viewpager that the fragments have changed.
-//        viewPager.getAdapter().notifyDataSetChanged();
         return mCurrentUserSSN;
     }
 
@@ -397,8 +366,6 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
 
         public PagerAdapter(android.support.v4.app.FragmentManager fm, int NumOfTabs) {
             super(fm);
-
-
             this.mNumOfTabs = NumOfTabs;
         }
 
@@ -437,22 +404,20 @@ public class MainView extends AppCompatActivity implements TabFragmentMain.passD
     }
 
 
-//    class MyTimerTask extends TimerTask {
-//        public void run() {
-//            //passes database for TabFragmentHighScore
-////            passDB(db);
-//
-//            //TODO implement regular step counter save here to database
-//            System.out.println("");
-//        }
-//    }
 
     public void AppExit(){
-        this.finish();
-        Intent intent = new Intent(Intent.ACTION_MAIN);
-        intent.addCategory(Intent.CATEGORY_HOME);
-        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        intent.putExtra("EXIT", true);
         startActivity(intent);
+
+    }//close method
+
+    public void BackToLogin(){
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+
     }//close method
 
 

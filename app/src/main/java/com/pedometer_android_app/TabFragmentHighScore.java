@@ -48,15 +48,7 @@ public class TabFragmentHighScore extends Fragment {
 
     public void populateHighScore(){
         Log.d("TabFragmentHighScore", "This is executed in setDB!");
-//        db.resetDB();
-//        this.db.addUser("86", "Martin", "Olsson", "martin", "blaha");
-//        DateFormat df = new SimpleDateFormat("MMM d, ''yyyy");
-//        String date = df.format(Calendar.getInstance().getTime());
-//
-//        this.db.addWalk("5000",date, "86");
-//        this.db.addWalk("4000",date, "86");
-//        this.db.addWalk("7000",date, "86");
-//        this.db.addWalk("3000", date, "86");
+
 
         ArrayList<Walk> walkList = db.getWalkData(mCurrentUser.getSSN());
 
